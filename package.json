@@ -1,7 +1,6 @@
 {
   "name": "book-server",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/book-app-alex-rhiannon/book-server/issues"
   },
-  "homepage": "https://github.com/book-app-alex-rhiannon/book-server#readme"
+  "homepage": "https://github.com/book-app-alex-rhiannon/book-server#readme",
+  "description": ""
+  "dependencies": {
+    "express": "^4.16.2",
+    "pg": "^6.1.2",
+    "cors": "^2.8.4",
+  }
 }
