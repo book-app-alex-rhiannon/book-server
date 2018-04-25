@@ -1,6 +1,7 @@
 'use strict';
 
 const cors = require('cors');
+const fs = require('fs');
 const pg = require('pg');
 const express = require('express');
 const app = express();
@@ -19,3 +20,4 @@ app.use(cors());
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
