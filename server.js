@@ -69,7 +69,33 @@ app.post('/books', (request, response) => {
   }
 });
 
-// app.put
+app.put('/books/:id', (request, response) => {
+  client.query(`
+  UPDATE authors
+  SET author=$1 WHERE author_id=$2
+  `,
+    [request.body.author, request.body.author_id]
+  )
+    .then(() => {
+      client.query(`
+    UPDATE books
+    SET author_id=$1, title=$2, author=$3, isbn=$4, image_url=$5, description=$6
+    WHERE book_id=$7
+      `,
+        [
+          request.body.author_id,
+          request.body.title,
+          request.body.author,
+          request.body.isbn,
+          request.body.image_url,
+          request.body.description,
+          request.params.id
+        ]
+      )
+    })
+    .then(() => response.send('update complete'))
+    .catch(console.error);
+});
 
 app.delete('/books/:id', (request, response) => {
   client.query(
