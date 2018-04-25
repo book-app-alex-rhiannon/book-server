@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/book-app-alex-rhiannon/book-server/issues"
   },
-  "homepage": "https://github.com/book-app-alex-rhiannon/book-server#readme"
+  "homepage": "https://github.com/book-app-alex-rhiannon/book-server#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "pg": "^7.4.1"
+  }
 }
