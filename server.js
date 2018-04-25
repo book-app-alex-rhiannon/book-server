@@ -19,7 +19,78 @@ app.use(cors());
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
+app.get('/books', (request, response) => {
+  client.query(`
+  SELECT * FROM books
+  INNER JOIN authors ON books.author_id=authors.author_id;
+  `)
+    .then(result => response.send(result.rows))
+    .catch(console.error);
+});
+
+app.post('/books', (request, response) => {
+  client.query(
+    'INSERT INTO authors(author) VALUES($1) ON CONFLICT DO NOTHING',
+    [request.body.author],
+
+    function (err) {
+      if (err) console.error(err);
+      queryTwo();
+    }
+  )
+
+  function queryTwo() {
+    client.query(
+      `SELECT author_id FROM authors WHERE author=$1`,
+      [request.body.author],
+
+      function (err, result) {
+        if (err) console.error(err);
+        queryThree(result.rows[0].author_id)
+      }
+    )
+  }
+  function queryThree(author_id) {
+    client.query(
+      `INSERT INTO books(author_id, title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5, $6);`,
+      [
+        author_id,
+        request.body.title,
+        request.body.author,
+        request.body.isbn,
+        request.body.image_url,
+        request.body.description
+      ],
+      function (err) {
+        if (err) console.error(err);
+        response.send('insertion complete');
+      }
+    );
+  }
+});
+
+// app.put
+
+app.delete('/books/:id', (request, response) => {
+  client.query(
+    `DELETE FROM books WHERE book_id=$1;`,
+    [request.params.id]
+  )
+    .then(() => response.send('deletion complete'))
+    .catch(console.error);
+});
+
+app.delete('/books', (request, response) => {
+  client.query('DELETE FROM books')
+    .then(() => response.send('deletion complete'))
+    .catch(console.error);
+});
+
+loadDB();
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
+
 ////////// ** DB Loaders\\\\\\\\\\\\\
 //|||||||||||||||||||||||||||||||||||||\\
 funsiton loadAuthors() {
