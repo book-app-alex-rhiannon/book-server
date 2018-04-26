@@ -117,9 +117,9 @@ loadDB();
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
-////////// ** DB Loaders\\\\\\\\\\\\\
+///////////// ** DB Loaders\\\\\\\\\\\\\
 //|||||||||||||||||||||||||||||||||||||\\
-funsiton loadAuthors() {
+function loadAuthors() {
   fs.readFile('books.json', 'utf8', (err, fd) => {
     JSON.parse(fd).forEach(ele => {
       client.query(
