@@ -161,7 +161,7 @@ function loadDB() {
   CREATE TABLE IF NOT EXISTS
   books (
     book_id SERIAL PRIMARY KEY,
-    author_id INEGER NOT NULL REFERENCES authors(author_id),
+    author_id INTEGER NOT NULL REFERENCES authors(author_id),
     author VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     isbn VARCHAR(255) NOT NULL,
