@@ -14,18 +14,17 @@ client.connect();
 client.on('error', err => console.error(err));
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
-app.get('api/v1/books', (request, response) => {
+app.get('/api/v1/books', (request, response) => {
   client.query(`SELECT * FROM books;`)
     .then(result => response.send(result.rows))
     .catch(console.error);
 });
 
-app.post('api/v1/books', express.urlencoded(), (request, response) => {
+app.post('/api/v1/books', (request, response) => {
   client.query(`INSERT INTO books(author, title, isbn, image_url, description) VALUES($1, $2, $3, $4, $5);`,
     [request.body.author,
     request.body.title,
@@ -37,52 +36,13 @@ app.post('api/v1/books', express.urlencoded(), (request, response) => {
   // add status http err
 });
 
-// app.post('/api/v1/books', (request, response) => {
-// client.query(
-//   'INSERT INTO authors(author) VALUES($1) ON CONFLICT DO NOTHING',
-//   [request.body.author],
 
-//   function (err) {
-//     if (err) console.error(err);
-//     queryTwo();
-//   }
-// )
-
-// function queryTwo() {
-//   client.query(
-//     `SELECT author_id FROM authors WHERE author=$1`,
-//     [request.body.author],
-
-//     function (err, result) {
-//       if (err) console.error(err);
-//       queryThree(result.rows[0].author_id)
-//     }
-//   )
-// }
-// function queryThree(author_id) {
-//   client.query(
-//     `INSERT INTO books(title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);`,
-//     [
-//       request.body.title,
-//       request.body.author,
-//       request.body.isbn,
-//       request.body.image_url,
-//       request.body.description
-//     ],
-//     function (err) {
-//       if (err) console.error(err);
-//       response.send('insertion complete');
-//     }
-//   );
-// }
-// });
-
-app.put('api/v1/books/:id', express.urlencoded(), (request, response) => {
+app.put('/api/v1/books/:id', (request, response) => {
   client.query(`
-    UPDATE books
-    SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5
-    WHERE book_id=$6;
-      `,
+  UPDATE books
+  SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5
+  WHERE book_id=$6;
+  `,
     [
       request.body.title,
       request.body.author,
@@ -99,7 +59,7 @@ app.put('api/v1/books/:id', express.urlencoded(), (request, response) => {
 
 
 
-app.delete('api/v1/books/:id', (request, response) => {
+app.delete('/api/v1/books/:id', (request, response) => {
   client.query(
     `DELETE FROM books WHERE book_id=$1;`,
     [request.params.id]
@@ -108,7 +68,7 @@ app.delete('api/v1/books/:id', (request, response) => {
     .catch(console.error);
 });
 
-app.delete('api/v1/books', (request, response) => {
+app.delete('/api/v1/books', (request, response) => {
   client.query('DELETE FROM books')
     .then(() => response.send('deletion complete'))
     .catch(console.error);
@@ -154,6 +114,7 @@ function loadDB() {
     .catch(console.error);
 }
 
+app.get('/*', (req, res) => res.redirect(CLIENT_URL));
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
