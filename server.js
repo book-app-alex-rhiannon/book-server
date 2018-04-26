@@ -19,13 +19,13 @@ app.use(cors());
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
-app.get('/api/v1/books', (request, response) => {
+app.get('api/v1/books', (request, response) => {
   client.query(`SELECT * FROM books;`)
     .then(result => response.send(result.rows))
     .catch(console.error);
 });
 
-app.post('/api/v1/books', express.urlencoded(), (request, response) => {
+app.post('api/v1/books', express.urlencoded(), (request, response) => {
   client.query(`INSERT INTO books(author, title, isbn, image_url, description) VALUES($1, $2, $3, $4, $5);`,
     [request.body.author,
     request.body.title,
@@ -77,7 +77,7 @@ app.post('/api/v1/books', express.urlencoded(), (request, response) => {
 // }
 // });
 
-app.put('/api/v1/books/:id', express.urlencoded(), (request, response) => {
+app.put('api/v1/books/:id', express.urlencoded(), (request, response) => {
   client.query(`
     UPDATE books
     SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5
@@ -99,7 +99,7 @@ app.put('/api/v1/books/:id', express.urlencoded(), (request, response) => {
 
 
 
-app.delete('/api/v1/books/:id', (request, response) => {
+app.delete('api/v1/books/:id', (request, response) => {
   client.query(
     `DELETE FROM books WHERE book_id=$1;`,
     [request.params.id]
@@ -108,7 +108,7 @@ app.delete('/api/v1/books/:id', (request, response) => {
     .catch(console.error);
 });
 
-app.delete('/api/v1/books', (request, response) => {
+app.delete('api/v1/books', (request, response) => {
   client.query('DELETE FROM books')
     .then(() => response.send('deletion complete'))
     .catch(console.error);
